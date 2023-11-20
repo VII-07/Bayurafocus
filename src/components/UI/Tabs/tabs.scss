@@ -1,0 +1,40 @@
+
+.radio__group div:nth-child(1){
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.radio__tab *{
+    border: none !important;
+    background-color: transparent;
+    outline: none;
+    border-radius: 10px !important;
+    color: white;
+    font-family: 'Playpen Sans', cursive;
+    font-weight: bold;
+    transition: all .3s;
+    font-size: 13px;
+    &:hover{
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 900px) {
+        padding: 7px;
+        font-size: 8px;
+    }
+
+    @media (max-width: 500px) {
+        padding: 6px;
+        font-size: 8px;
+    }
+}
+
+.radio__tab span:hover {
+    background: transparent;
+}
+
+.radio__tab  .ant-radio-button-wrapper-checked {
+    background: rgba(0, 0, 0, 0.3);
+  }
