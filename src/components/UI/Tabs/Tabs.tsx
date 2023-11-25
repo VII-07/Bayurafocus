@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Tab from "./Tab";
 import './tabs.scss'
 import { useDispatch } from "react-redux";
-import { setTimerLongBreakType, setTimerShortBreakType, setTimerWorkType, stopTime } from "../../../actions/timer.Actions";
+import { setTimerLongBreakType, setTimerShortBreakType, setTimerWorkType, stopTime } from "../../../redux/actions/timer.Actions";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 

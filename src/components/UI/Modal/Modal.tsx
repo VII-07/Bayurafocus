@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
-import { setTimeWork, setTimeShortBreak, setTimeLongBreak, setLongBreakValue } from "../../../actions/timer.Actions";
+import { setTimeWork, setTimeShortBreak, setTimeLongBreak, setLongBreakValue } from "../../../redux/actions/timer.Actions";
 
 
 

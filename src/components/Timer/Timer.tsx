@@ -6,13 +6,14 @@ import Tabs from "../UI/Tabs/Tabs";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import formatTime from "../functions/formatDate";
-import { setProgressTimer, setTimerLongBreakType, setTimerShortBreakType, setTimerWorkType, startTime, stopTime } from "../../actions/timer.Actions";
-import soundClickPath from "../../assets/mech-keyboard-02-102918.mp3";
-import alarmSoundPAth from "../../assets/alarma2-34724.mp3"
+import { startTimer, stopTimer, setTimerType, setProgressTimer} from "../../redux/actions/timer.Actions";
+import soundClickPath from "./../../assets/mech-keyboard-02-102918.mp3";
+import alarmSoundPAth from "./../../assets/alarma2-34724.mp3"
 import { StepForwardOutlined } from "@ant-design/icons";
+import { playSound } from "../functions/playSound";
 
 const Timer = () => {
-    const { timeWork, timeShortBreak, timeLongBreak, work, longBreak, shortBreak, isRunning, progressTimer, intervalLongBreak } = useSelector((state: RootState) => state.timer);
+    const { isRunning, timeWork, timeShortBreak, timeLongBreak, timerType,intervalLongBreak } = useSelector((state: RootState) => state.timer);
     const [timeWorkState, setTimeWorkState] = useState(timeWork);
     const [timeShortBreakState, setTimeShortBreakState] = useState(timeShortBreak);
     const [timeLongBreakState, setTimeLongBreakState] = useState(timeLongBreak);
@@ -23,6 +24,7 @@ const Timer = () => {
         setTimeWorkState(timeWork);
         setTimeShortBreakState(timeShortBreak);
         setTimeLongBreakState(timeLongBreak);
+        console.log(timeWork,timeShortBreak, timeLongBreak);
     }, [timeWork, timeShortBreak, timeLongBreak]);
 
     const calculateElapsedTimeInPercent = (mainTime: number, elapsedTime: number) => {
@@ -30,73 +32,62 @@ const Timer = () => {
         return elapsedTimeInPercent;
     };
 
-    const playBottonSound = () => {
-        const soundClick = new Audio(soundClickPath);
-        soundClick.play();
-    };
-    const playAlarmSound = () => {
-        const soundAlarm = new Audio(alarmSoundPAth);
-        soundAlarm.play();
-    }
-
     const checkAndOnShortBreakOrLongBreak = useCallback(() => {
         if (counterBreakInterval !== intervalLongBreak) {
-            dispatch(setTimerShortBreakType());
+            dispatch(setTimerType('shortBreak'));
             setCounterBreakInterval(counterBreakInterval + 1);
             console.log(counterBreakInterval, intervalLongBreak)
         } else {
-            dispatch(setTimerLongBreakType());
+            dispatch(setTimerType('longBreak'));
             setCounterBreakInterval(1);
         }
     }, [counterBreakInterval, intervalLongBreak, dispatch])
 
-
-
     useEffect(() => {
         resetTime();
         dispatch(setProgressTimer(0));
-    }, [work, shortBreak, longBreak, resetTime, dispatch])
+    }, [timerType, resetTime, dispatch])
 
     useEffect(() => {
         let interval: number;
         if (isRunning) {
-            if (work) {
+            if (timerType === 'work') {
                 interval = setInterval(() => {
                     if (timeWorkState > 0) {
                         setTimeWorkState((prevTime) => prevTime - 1);
                         dispatch(setProgressTimer(calculateElapsedTimeInPercent(timeWork, timeWorkState)));
                     } else {
-                        dispatch(stopTime());
+                        dispatch(stopTimer());
                         checkAndOnShortBreakOrLongBreak();
-                        playAlarmSound();
+                        playSound(alarmSoundPAth);
                     }
                 }, 1000);
                 return () => {
                     clearInterval(interval);
                 };
-            } else if (shortBreak) {
+            } else if (timerType === 'shortBreak') {
                 interval = setInterval(() => {
                     if (timeShortBreakState > 0) {
                         dispatch(setProgressTimer(calculateElapsedTimeInPercent(timeShortBreak, timeShortBreakState)));
                         setTimeShortBreakState((prevTime) => prevTime - 1);
                     } else {
-                        dispatch(stopTime());
-                        playAlarmSound();
-                        dispatch(setTimerWorkType());
+                        dispatch(stopTimer());
+                        playSound(alarmSoundPAth);
+                        dispatch(setTimerType('work'));
                     }
                 }, 1000);
                 return () => {
                     clearInterval(interval);
                 };
-            } else if (longBreak) {
+            } else if (timerType === 'longBreak') {
                 interval = setInterval(() => {
                     if (timeLongBreakState > 0) {
-                        dispatch(setProgressTimer(calculateElapsedTimeInPercent(timeLongBreak, timeLongBreakState)))
+                        dispatch(setProgressTimer(calculateElapsedTimeInPercent(timeLongBreak, timeLongBreakState)));
                         setTimeLongBreakState((prevTime) => prevTime - 1);
                     } else {
-                        dispatch(stopTime());
-                        playAlarmSound();
-                        dispatch(setTimerWorkType());
+                        dispatch(stopTimer());
+                        playSound(alarmSoundPAth);
+                        dispatch(setTimerType('work'));
                     }
                 }, 1000);
                 return () => {
@@ -104,35 +95,35 @@ const Timer = () => {
                 };
             }
         }
-    }, [isRunning, work, shortBreak, longBreak, timeWork, timeShortBreak, timeLongBreak, timeWorkState, timeLongBreakState, timeShortBreakState, progressTimer, checkAndOnShortBreakOrLongBreak, dispatch]);
+    }, [isRunning, timeWork, timeWorkState, timeShortBreak, timeShortBreakState, timeLongBreak, timeLongBreakState, timerType, dispatch, checkAndOnShortBreakOrLongBreak]);
 
     let formattedTime;
 
-    if (work) {
+    if (timerType === 'work') {
         formattedTime = formatTime(timeWorkState);
-    } else if (shortBreak) {
+    } else if (timerType === 'shortBreak') {
         formattedTime = formatTime(timeShortBreakState);
-    } else if (longBreak) {
+    } else if (timerType === 'longBreak') {
         formattedTime = formatTime(timeLongBreakState);
     }
 
     const handleStartTimer = () => {
-        dispatch(startTime());
-        playBottonSound();
+        dispatch(startTimer());
+        playSound(soundClickPath);
     };
 
     const handleStopTimer = () => {
-        dispatch(stopTime());
-        playBottonSound();
+        dispatch(stopTimer());
+        playSound(soundClickPath);
     };
 
     const skipTime = () => {
-        if (work) {
+        if (timerType === 'work') {
             checkAndOnShortBreakOrLongBreak();
-        } else if (shortBreak) {
-            dispatch(setTimerWorkType());
-        } else if (longBreak) {
-            dispatch(setTimerWorkType());
+        } else if (timerType === 'shortBreak') {
+            dispatch(setTimerType('work'));
+        } else if (timerType === 'longBreak') {
+            dispatch(setTimerType('work'));
         }
     };
 
@@ -147,9 +138,9 @@ const Timer = () => {
                             className={`
                             ${style.start__btn} 
                             ${isRunning ? style.start__btn__active : ''}
-                            ${work ? style.work__btn : ''}
-                            ${shortBreak ? style.short__break__btn : ''}
-                            ${longBreak ? style.long__break__btn : ''}
+                            ${timerType === 'work' ? style.work__btn : ''}
+                            ${timerType === 'shortBreak' ? style.short__break__btn : ''}
+                            ${timerType === 'longBreak' ? style.long__break__btn : ''}
                             `}
                             onClick={isRunning ? handleStopTimer : handleStartTimer}
                         >
@@ -168,4 +159,4 @@ const Timer = () => {
     );
 }
 
-export default Timer;
+export default Timer;    
