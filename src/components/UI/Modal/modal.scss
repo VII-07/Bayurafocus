@@ -28,22 +28,7 @@
 
     @media (max-width: 700px) {
         padding: 7px;
-        font-size: 9px;
-    }
-
-    @media (max-width: 500px) {
-        padding: 6px;
-        font-size: 8px;
-    }
-
-    @media (max-width: 300px) {
-        padding: 5px;
-        font-size: 7px;
-    }
-
-    @media (max-width: 250px) {
-        padding: 4px;
-        font-size: 6px;
+        font-size: 18px;
     }
 
     & span {
@@ -191,4 +176,12 @@
     &:active {
         transform: scale(0.9);
     }
+}
+
+.input__title {
+    color: black !important;
+}
+.flex__center {
+    display: flex;
+    justify-content: center;
 }

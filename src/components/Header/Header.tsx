@@ -16,7 +16,7 @@ const { Text } = Typography;
 
 const HeaderComponent = () => {
 
-    const { progressTimer } = useSelector((state: RootState) => state.timer)
+    const { progressTimer } = useSelector((state: RootState) => state.progress)
 
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>

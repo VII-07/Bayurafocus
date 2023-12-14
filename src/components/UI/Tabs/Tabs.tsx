@@ -1,55 +1,36 @@
 import { Radio } from "antd";
 import { RadioChangeEvent } from 'antd/lib/radio';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Tab from "./Tab";
 import './tabs.scss'
-import { useDispatch } from "react-redux";
-import { setTimerLongBreakType, setTimerShortBreakType, setTimerWorkType, stopTime } from "../../../redux/actions/timer.Actions";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
+import { setRadioType } from "../../../redux/actions/radioButtonActions";
+import { stopTimer } from "../../../redux/actions/ranningAction";
 
 const Tabs = () => {
-    const {work, shortBreak, longBreak} = useSelector((state: RootState) => state.timer)
-    const [workType, setWorkType] = useState('bayurato');
+    const {workTypes, selectWorkType} = useSelector((state: RootState) => state.radio)
     const dispatch = useDispatch();
 
-
-
-    const onChange = (e: RadioChangeEvent) => {
-        setWorkType(e.target.value);
+    const handleRadioChange = (e: RadioChangeEvent) => {
+        dispatch(setRadioType(e.target.value));
     };
-    useEffect(() => {
-        if(work) {
-            setWorkType('bayurato');
-        } else if(shortBreak) {
-            setWorkType('shortBreak');
-        } else if(longBreak) {
-            setWorkType('longBreak');
-        }
-    },[work, shortBreak, longBreak])
 
     useEffect(() => {
-        switch(workType) {
-            case'bayurato': dispatch(stopTime()), dispatch(setTimerWorkType())
-            break;
-            case 'shortBreak': dispatch(stopTime()), dispatch(setTimerShortBreakType())
-            break;
-            case 'longBreak': dispatch(stopTime()) ,dispatch(setTimerLongBreakType())
-            break;
-        }
-    }, [workType, dispatch]);
-
+        dispatch(stopTimer());
+        dispatch(setRadioType(selectWorkType));
+    }, [selectWorkType, workTypes, dispatch]);
 
     return (
-        <div className='radio__group'>
+        <div className='radio__group__container'>
             <Radio.Group
-                value={workType}
-                onChange={onChange}
-                style={{ marginBottom: 16 }}
+                value={selectWorkType}
+                onChange={handleRadioChange}
+                className="radio__group"
             >
-                <Tab title={'Bayurato'} value={'bayurato'} />
-                <Tab title={'Short Break'} value={'shortBreak'} />
-                <Tab title={'Long Break'} value={'longBreak'} />
+                <Tab title={'Bayurato'} value={`${workTypes[0]}`} />
+                <Tab title={'Short Break'} value={`${workTypes[1]}`} />
+                <Tab title={'Long Break'} value={`${workTypes[2]}`} />
             </Radio.Group>
         </div>
     );

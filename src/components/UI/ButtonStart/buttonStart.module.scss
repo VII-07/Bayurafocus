@@ -1,0 +1,116 @@
+.start__btn__container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.start__btn {
+    color: #EB6D58;
+    background-color: white;
+    width: 200px !important;
+    height: 70px !important;
+    border-color: transparent !important;
+    text-transform: uppercase;
+    font-family: 'Playpen Sans', cursive;
+    font-weight: 700;
+    font-size: 150%;
+    box-shadow: 2px 6px 2px rgba(0, 0, 0, 0.2), inset 0px -6px 0px rgba(0, 0, 0, 0.1);
+    & span{
+        transition: all 1s;
+        @media (max-width: 500px) {
+            font-size: 25px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        width: 200px !important;
+        height: 100px !important;
+        font-size: 100%;
+        margin-top: 20%;
+        margin-bottom: 20%;
+    }
+}
+
+.next__btn {
+    position: absolute;
+    left: 110%;
+    top: 20%;
+
+    & button {
+        background: none;
+        border: none;
+        box-shadow: none;
+
+        & span {
+            color: white !important;
+            border-radius: 10px !important;
+
+            & svg {
+                width: 40px !important;
+                height: 40px !important;
+            }
+        }
+
+        &:active {
+            transform: scale(1.1) !important;
+        }
+
+        &:focus {
+            :global .ant-wave {
+                display: none;
+            }
+        }
+    }
+
+    @media (max-width: 600px) {
+        left: 105%;
+
+        & button span svg {
+            width: 30px !important;
+            height: 30px !important;
+        }
+    }
+}
+
+.start__btn__active {
+    box-shadow: none !important;
+    transform: translateY(4px);
+}
+
+.work__bg {
+    color: #EB6D58;
+
+    &:hover {
+        color: #EB6D58 !important;
+    }
+
+    & span:hover {
+        color: #EB6D58 !important;
+    }
+}
+
+.short__break__bg {
+    color: rgb(103, 134, 50);
+
+    &:hover {
+        color: rgb(103, 134, 50) !important;
+    }
+
+    & span:hover {
+        color: rgb(103, 134, 50) !important;
+    }
+}
+
+.long__break__bg {
+    color: #522582;
+
+    &:hover {
+        color: #522582 !important;
+    }
+
+    & span:hover {
+        color: #522582 !important;
+    }
+}
+
+
